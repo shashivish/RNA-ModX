@@ -20,7 +20,7 @@ def predict_rna_modification_status(rna_sequence, model):
     x = apply_one_hot_encode(rna_sequence)
     x_test= []
     x_test.append(np.array(x))
-    print("Predicting Sequence : ", x_test , x_test[0].shape)
+    print("Predicting Sequence : ", x_test , " with Shape ", x_test[0].shape)
     y_pred = model.predict(x_test)
 
     print("Predicted Result : ", y_pred)
