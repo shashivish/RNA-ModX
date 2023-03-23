@@ -3,12 +3,11 @@
 {% block content %}
 <h1>{% block title %} Input RNA Sequence for Prediction {% endblock %}</h1>
 
+
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
-
 <form method="post" action="{{ url_for('predict') }}">
     <div class="form-group">
-        <label for="text">Input text:</label>
+        <label for="text">Input RNA Sequence:</label>
         <input type="text" class="form-control" id="text" name="RNA Sequence" placeholder="Enter RNA Sequence here...">
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>

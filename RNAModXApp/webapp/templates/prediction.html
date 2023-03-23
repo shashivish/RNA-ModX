@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{% block title %} Model Prediction Result {% endblock %}</h1>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<body>
+<p>The model prediction is: {{ prediction }}</p>
+</body>
+
+{% endblock %}

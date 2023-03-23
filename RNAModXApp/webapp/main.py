@@ -6,7 +6,7 @@ from flask import Flask, jsonify, request, render_template, flash
 
 ##creating a flask app and naming it "app"
 app = Flask('app')
-
+app.config['SECRET_KEY'] = 'mysecretkey'
 
 @app.route('/')
 def index():
@@ -44,7 +44,8 @@ def predict():
             result = {
                 'model_prediction': r
             }
-            return jsonify(result)
+            # return jsonify(result)
+            return render_template('prediction.html', prediction=r)
     return render_template('index.html')
 
 
