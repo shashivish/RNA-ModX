@@ -16,4 +16,4 @@ http://127.0.0.1:9696
 
 ## Input RNA Sequence and generate prediction.
 
-![](C:\Users\shashi.vish\Pictures\TestWebsite.jpg)
+![](images\TestWebsite.jpg)
