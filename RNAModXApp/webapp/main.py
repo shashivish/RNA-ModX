@@ -7,6 +7,7 @@ from flask import Flask, jsonify, request, render_template, flash
 ##creating a flask app and naming it "app"
 app = Flask('app')
 app.config['SECRET_KEY'] = 'mysecretkey'
+app.jinja_env.globals.update(len=len)
 
 
 @app.route('/')
@@ -41,7 +42,7 @@ def predict():
 
 
             # return jsonify(result)
-            return render_template('prediction.html', prediction=predictions)
+            return render_template('prediction.html', rna_sequence=rna_sequence , position=predictions)
     return render_template('index.html')
 
 

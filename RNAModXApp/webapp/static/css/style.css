@@ -59,3 +59,7 @@ button[type=submit] {
 button[type=submit]:hover {
   background-color: #148f77;
 }
+
+highlight {
+        background-color: yellow;
+      }

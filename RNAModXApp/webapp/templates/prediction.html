@@ -6,7 +6,28 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
 <body>
-<p>The model prediction is: {{ prediction }}</p>
+<!--<p>The model prediction is: {{ prediction }}</p>-->
+<p>
+    {% for i in range(len(rna_sequence)) %}
+    {% if i in position %}
+    {% if rna_sequence[i] == 'A' %}
+    <span class="highlight_yellow">{{ rna_sequence[i] }}</span>
+    {% endif %}
+    {% if rna_sequence[i] == 'G' %}
+    <span class="highlight_green">{{ rna_sequence[i] }}</span>
+    {% endif %}
+    {% if rna_sequence[i] == 'T' %}
+    <span class="highlight_red">{{ rna_sequence[i] }}</span>
+    {% endif %}
+    {% if rna_sequence[i] == 'U' %}
+    <span class="highlight_blue">{{ rna_sequence[i] }}</span>
+    {% endif %}
+    {% else %}
+    {{ rna_sequence[i] }}
+    {% endif %}
+    {% endfor %}
+</p>
+
 </body>
 
 {% endblock %}
