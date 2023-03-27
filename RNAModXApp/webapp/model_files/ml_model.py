@@ -55,6 +55,7 @@ class ModelPredictionHelperClass:
 
     def perform_prediction_based_on_window(self, input_sequence: str, model, window_size: int):
         list_of_position_to_be_highlighted = []
+        predict_class = []
         for start in range(len(input_sequence)):
             sub_sequence_for_prediction = input_sequence[start:start + window_size + 1]
             if not len(sub_sequence_for_prediction) < window_size + 1:  # Exceeded Sequence Boundary
@@ -65,14 +66,15 @@ class ModelPredictionHelperClass:
                 xg_matrix = xgb.DMatrix([x_test])
                 y_pred = model.predict(xg_matrix)
                 print("Predicted Class  : ", y_pred)
+                predict_class.append(y_pred)
                 if y_pred != 13:  # Sequence if modified if class is not 13
                     position = start + (window_size // 2)
                     list_of_position_to_be_highlighted.append(position)
 
-        return list_of_position_to_be_highlighted
+        return list_of_position_to_be_highlighted , predict_class
 
     def predict_rna_modification_status(self, rna_sequence, model, window_size):
         self.MAX_LENGTH = int(window_size) + 1
         window_size = int(window_size)
-        modified_positions = self.perform_prediction_based_on_window(rna_sequence, model, window_size)
-        return modified_positions
+        modified_positions , predict_class= self.perform_prediction_based_on_window(rna_sequence, model, window_size)
+        return modified_positions , predict_class

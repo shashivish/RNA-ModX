@@ -14,6 +14,6 @@ rna_sequence = 'CCCCATACCCCTAGTCATCCTCGGCAGGTCTCAGTCCCGGCTCCATCTGTGCCCTCGCCCCAGC
 print("Model Loaded Successfully.")
 cls = ModelPredictionHelperClass()
 
-predictions = cls.predict_rna_modification_status(rna_sequence, model, window_size)
+predictions , predict_class= cls.predict_rna_modification_status(rna_sequence, model, window_size)
 
-print(predictions)
+print(predict_class)
