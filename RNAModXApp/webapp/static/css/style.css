@@ -1,65 +1,51 @@
-body {
-  background-color: #f7f7f7;
-  font-family: 'Open Sans', sans-serif;
-  font-size: 16px;
-}
-
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-header {
-  padding: 30px 0;
+/* Style the heading */
+h1 {
+  color: #333;
   text-align: center;
-  background-color: #1abc9c;
-  color: #fff;
-  margin-bottom: 30px;
+  font-size: 36px;
+  margin-bottom: 20px;
 }
 
-header h1 {
-  font-size: 3em;
-  margin-top: 0;
+/* Style the paragraph */
+p {
+  color: #666;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+/* Style the modification list */
+.modification-list {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.modification-list li {
+  color: #333;
+  font-size: 18px;
   margin-bottom: 10px;
 }
 
-form {
-  padding: 30px;
-  background-color: #fff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+/* Style the sequence */
+.sequence {
+  font-family: monospace;
+  font-size: 24px;
+  line-height: 1.5;
 }
 
-label {
-  display: block;
-  margin-bottom: 10px;
+.sequence span {
+  color: red;
+  background-color: yellow;
   font-weight: bold;
 }
 
-input[type=text] {
-  width: 100%;
-  padding: 10px;
+/* Style the container */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
   border-radius: 5px;
-  border: none;
-  background-color: #f2f2f2;
-  margin-bottom: 20px;
-  font-size: 1.2em;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-
-button[type=submit] {
-  background-color: #1abc9c;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  font-size: 1.2em;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-button[type=submit]:hover {
-  background-color: #148f77;
-}
-
-highlight {
-        background-color: yellow;
-      }

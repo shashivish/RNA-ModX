@@ -9,7 +9,7 @@
 <!--<p>The model prediction is: {{ prediction }}</p>-->
 <p>
     {% for i in range(len(rna_sequence)) %}
-    {% if i in position %}
+    {% if i in positions %}
     {% if rna_sequence[i] == 'A' %}
     <span class="highlight_yellow">{{ rna_sequence[i] }}</span>
     {% endif %}
