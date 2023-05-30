@@ -7,7 +7,7 @@ tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
 model = AutoModel.from_pretrained("bert-base-uncased")
 
 # Read the text file
-with open("text_file.txt", "r", encoding="utf-8") as file:
+with open("state_of_the_union.txt", "r", encoding="utf-8") as file:
     texts = file.readlines()
 
 # Tokenize and encode the texts
