@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RNA Modification Prediction</title>
+    <script type="text/javascript">
+		function sendAPIRequest() {
+			var sequence = document.getElementById("sequence").value;
+			var xhr = new XMLHttpRequest();
+			xhr.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					var response = JSON.parse(this.responseText);
+					window.location.href = "/result?positions=" + response.positions + "&mod_types=" + response.mod_types + "&sequence=" + sequence;
+				}
+			};
+			xhr.open("POST", "/api/predict", true);
+			xhr.setRequestHeader("Content-Type", "application/json");
+			xhr.send(JSON.stringify({"sequence": sequence}));
+		}
+	</script>
+</head>
+<body>
+<h1>RNA Modification Prediction</h1>
+<label for="sequence">Enter RNA Sequence:</label>
+<textarea id="sequence" rows="5" cols="50"></textarea><br>
+<input type="button" value="Predict" onclick="sendAPIRequest()">
+</body>
+</html>

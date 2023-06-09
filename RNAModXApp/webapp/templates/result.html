@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <title>RNA Modification Prediction Result</title>
+</head>
+<body>
+<h1>RNA Modification Prediction Result</h1>
+<p>The predicted RNA modification is: {{ ", ".join(mod_types) }}</p>
+<p>The modification occurs at positions: </p>
+<pre>
+      {% set pos_list = positions[0].split(",")  %}
+      {% set mod_list = mod_types[0].split(",")  %}
+      {% for i in range(0, len(sequence)) %}
+            {% if str(i+1) in  pos_list %}
+               <span style="color: red">{{ sequence[i] }}</span> {{  mod_list[0] }}
+            {% else %}
+              {{ sequence[i] }}
+            {% endif %}
+
+     {% endfor %}
+    </pre>
+</body>
+</html>
