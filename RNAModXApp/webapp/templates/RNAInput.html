@@ -1,7 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>RNA Modification Prediction</title>
+    <title>RNA Modification Prediction UI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f1f1;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+        }
+        button {
+            margin-top: 10px;
+        }
+        #predictionResult {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
     <script type="text/javascript">
 		function sendAPIRequest() {
 			var sequence = document.getElementById("sequence").value;
@@ -21,7 +42,7 @@
 <body>
 <h1>RNA Modification Prediction</h1>
 <label for="sequence">Enter RNA Sequence:</label>
-<textarea id="sequence" rows="5" cols="50"></textarea><br>
+<textarea id="sequence" rows="5" cols="50" placeholder="Enter your RNA sequence here..." ></textarea><br>
 <input type="button" value="Predict" onclick="sendAPIRequest()">
 </body>
 </html>
