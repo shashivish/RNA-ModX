@@ -54,7 +54,7 @@ def encode_sequence(rna_sequence: str, encoding_file_path: str):
     except Exception as e:
         raise ValueError("An error occurred while loading the file: " + str(e))
 
-    print(f"Encoding file successfully loaded.")
+#     print(f"Encoding file successfully loaded.")
 
     if len(rna_sequence) != 101:
         raise ValueError('Invalid Sequence Length. Expected Sequence Length is 101.')
@@ -66,27 +66,37 @@ def encode_sequence(rna_sequence: str, encoding_file_path: str):
 
 
 if __name__ == '__main__':
-    encoding_file = 'C:/Users/shashi.vish/Documents/Shashi/Education/HigherEducation/NUS/Capstone Project/Git/RNA-ModX/RNAModXApp//notebooks/model_building/LSTM//3-mer-dictionary.pkl'
-    sequence = 'GGGGCCGTGGATACCTGCCTTTTAATTCTTTTTTATTCGCCCATCGGGGCCGCGGATACCTGCTTTTTATTTTTTTTTCCTTAGCCCATCGGGGTATCGG'
-    x_train = encode_sequence(sequence, encoding_file)
-    print(x_train)
+    encoding_file = './3-mer-dictionary.pkl'
+    sequence = 'GGGGCCGTGGATACCTGCCTTTTAATTCTTTTTTATTCGCCCATCGGGGCCGCGGATACCTGCTTTTTATTTTTTTTTCCTTAGCCCATCGGGGTATCGGCTGCA'
+    
+    i = 0
+    while i+101 <= len(sequence):
+        subseq = sequence[i:i+101]
+        print('predict for sub sequence:', subseq)
+    
+        x_train = encode_sequence(subseq, encoding_file)
+#         print(x_train)
 
-    model_path = "../../../models/Transfomer_3Mer/hAm_model.pt"
+        prediction_class = ['hAm','hCm','hGm','hTm','hm1A','hm5C','hm5U','hm6A','hm6Am','hm7G','hPsi','Atol']
 
-    # If you have GPU then remove map location parameter
-    model = torch.load(model_path, map_location=torch.device('cpu'))
-    print(model)
+        for c in prediction_class:
+            model_path = "../model/" + c + "_model.pt"
 
-    print("Shape of X_train ", x_train.shape)
+            # If you have GPU then remove map location parameter
+            model = torch.load(model_path, map_location=torch.device('cpu'))
+    #         print(model)
 
-    # 0  - Non Modified RNA Nucleoside
-    # 1  - Corresponding Modified Nucleoside
+    #         print("Shape of X_train ", x_train.shape)
 
-    model.eval()
-    with torch.no_grad():
-        output = model(x_train)
-        print("Raw Output : ", output)
-        probabilities = torch.sigmoid(output)
-        print("Probabilities : ", probabilities)
-        predicted_class = (probabilities > 0.5).float()
-        print("Predicted Class : ", predicted_class)
+            # 0  - Non Modified RNA Nucleoside
+            # 1  - Corresponding Modified Nucleoside
+
+            model.eval()
+            with torch.no_grad():
+                output = model(x_train)
+        #         print("Raw Output : ", output)
+                probabilities = torch.sigmoid(output)
+                print("Probabilities : ", probabilities)
+                predicted_class = (probabilities > 0.5).float()
+        #         print("Predicted Class : ", predicted_class)
+        i+=1
