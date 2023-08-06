@@ -6,6 +6,7 @@ import pickle
 import torch
 import numpy as np
 import torch.nn as nn
+import json
 
 
 class RNATransformerModel(nn.Module):
@@ -64,20 +65,55 @@ def encode_sequence(rna_sequence: str, encoding_file_path: str):
 
     return X_encoded
 
+
+'''
+sequence : input 101 sequence to get middle position as target class.
+'''
+
+
+def get_target_prediction_class_based_on_middle_position(rna_sequence: str) -> str:
+    target = rna_sequence[50]
+    return target
+
+
 '''
 
 '''
+
+
 def get_predictions(sequence, encoding_file):
-    response = {}
+    prediction_class_mapping = {"A": ['hAm', 'hm1A', 'hm6A', 'hm6Am', 'Atol'], "G": ['hGm', 'hm7G'],
+                                "C": ['hm5C', 'hCm'],
+                                "T": ['hTm', 'hm5U', 'hPsi']}
+
+    response = {"COMPLETE_RNA_SEQUENCE": sequence, "POSITION_WITH_PROBABILITIES": []}
     i = 0
+    middle_position_index = 51
     while i + 101 <= len(sequence):
+
         subseq = sequence[i:i + 101]
         print('predict for sub sequence:', subseq)
 
-        x_train = encode_sequence(subseq, encoding_file)
-        #         print(x_train)
+        target = get_target_prediction_class_based_on_middle_position(subseq)
 
-        prediction_class = ['hAm', 'hCm', 'hGm', 'hTm', 'hm1A', 'hm5C', 'hm5U', 'hm6A', 'hm6Am', 'hm7G', 'hPsi', 'Atol']
+        # A , C , G , T/U
+        if target == 'A':
+            print("Detected Pipeline for A")
+            prediction_class = prediction_class_mapping[target]
+        elif target == "G":
+            print("Detected Pipeline for G")
+            prediction_class = prediction_class_mapping[target]
+        elif target == "C":
+            print("Detected Pipeline for C")
+            prediction_class = prediction_class_mapping[target]
+        elif target == "T" or target == "U":
+            print("Detected Pipeline for T/U")
+            prediction_class = prediction_class_mapping["T"]
+        else:
+            print("Invalid Nucleoside Detected.")
+            prediction_class = []
+
+        x_train = encode_sequence(subseq, encoding_file)
         list_of_probabilities_for_each_class = []
         for c in prediction_class:
             data = {}
@@ -97,26 +133,25 @@ def get_predictions(sequence, encoding_file):
                 print("Probabilities : ", probabilities)
                 predicted_class = (probabilities > 0.5).float()
 
-                if predicted_class == 1:
-                    # Modified Nucleoside Predicted
-                    data[c] = probabilities
-                else:
-                    if probabilities < 0:
-                        data['NonMod'] = 0
-                    else:
-                        data['NonMod'] = abs(1 - probabilities)  # Keeping Probability positive
+                data[c] = probabilities.numpy().tolist()
 
             list_of_probabilities_for_each_class.append(data)
 
-        response[subseq] = list_of_probabilities_for_each_class
-        #         print("Predicted Class : ", predicted_class)
+        rna_index_modification_data = {"RNA_MODIFIED_INDEX": middle_position_index,
+                                       "PARENT_MODIFIED_NUCLEOSIDE": target,
+                                       "SUBCLASS_MODIFICATION_PROBABILITIES": list_of_probabilities_for_each_class}
+
+        response["POSITION_WITH_PROBABILITIES"].append(rna_index_modification_data)
+
         i += 1
-    return response
+        middle_position_index += 1
+    json_string = json.dumps(response)
+    return json_string
 
 
 if __name__ == '__main__':
     encoding_file = './3-mer-dictionary.pkl'
-    #sequence = 'GGGGCCGTGGATACCTGCCTTTTAATTCTTTTTTATTCGCCCATCGGGGCCGCGGATACCTGCTTTTTATTTTTTTTTCCTTAGCCCATCGGGGTATCGGCTGCA'
-    sequence = "TTGCCACACTGCTGGACGCCTGCAAGGCCAAGGGTACGGAGGTCATCATCATCACCACCGATACCTCGCCCTCAGGCACCAAGAAGACCCGGCAGTATCTC"
+    # sequence = 'GGGGCCGTGGATACCTGCCTTTTAATTCTTTTTTATTCGCCCATCGGGGCCGCGGATACCTGCTTTTTATTTTTTTTTCCTTAGCCCATCGGGGTATCGGCTGCA'
+    sequence = "GGGGCCGTGGATACCTGCCTTTTAATTCTTTTTTATTCGCCCATCGGGGCCGCGGATACCTGCTTTTTATTTTTTTTTCCTTAGCCCATCGGGGTATCGGATACCTGCTGATTCCCTTCCCCTCTGAACCCCCAACACTCTGGCCCATCGGGGTGACGGATATCTGCTTTTTAAAAATTTTCTTTTTTTGGCCCATCGGGGCTTCGGATA"
     response = get_predictions(sequence, encoding_file)
     print(response)
