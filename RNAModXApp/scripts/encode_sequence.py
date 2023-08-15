@@ -95,6 +95,9 @@ def encode_sequence(rna_sequence: str, encoding_file_path: str):
 
     return X_encoded
 
+"""
+Takes Input RNA Sequence and returns True/False is Sequence is Modified or not.
+"""
 
 def is_modified_nucleoside(rna_sequence):
 
