@@ -96,6 +96,11 @@ def encode_sequence(rna_sequence: str, encoding_file_path: str):
     return X_encoded
 
 
+def is_modified_nucleoside(rna_sequence):
+
+
+    return True
+
 '''
 sequence : input 101 sequence to get middle position as target class.
 '''
@@ -124,6 +129,9 @@ def get_predictions(sequence, encoding_file):
 
         subseq = sequence[i:i + sequence_len]
         print('predict for sub sequence:', subseq)
+
+        if not is_modified_nucleoside(subseq):
+            continue
 
         target = get_middle_nucleoside(subseq)
 
