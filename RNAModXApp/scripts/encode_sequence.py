@@ -8,6 +8,8 @@ import numpy as np
 import torch.nn as nn
 import json
 
+from torch.nn import DataParallel
+
 
 class RNATransformerModel(nn.Module):
     def __init__(self, input_dim, embedding_dim, hidden_dim, num_layers, output_dim, dropout=0.5):
@@ -37,6 +39,34 @@ class RNATransformerModel(nn.Module):
         return out.squeeze()
 
 
+def get_position_class_mapping(target):
+    # "hm5C -  0
+    # hCm - 1"
+
+    # "hTm  - 0
+    # hm5U - 1
+    # hPsi - 2"
+
+    # "hGm  - 0
+    # hm7G - 1"
+
+    # "hm6A - 0
+    # hm1A - 1
+    # hAm  - 2
+    # Atol - 3
+    # hm6Am -4"
+
+    if target == "A":
+        return {"0": "hm6A", "1": "hm1A", "2": "hAm", "3": "Atol", "4": "hm6Am"}
+    elif target == "G":
+        return {"0": "hGm", "1": "hm7G"}
+    elif target == "C":
+        return {"0": "hm5C", "1": "hCm"}
+    elif target == "T" or target == "U":
+        return {"0": "hTm", "1": "hm5U", "2": "hPsi"}
+    return ""
+
+
 def encode_with_k_mer_codon(rna_sequence, kmer_dict, k):
     encoded_sequence = []
     for i in range(len(rna_sequence) - k + 1):
@@ -61,7 +91,7 @@ def encode_sequence(rna_sequence: str, encoding_file_path: str):
         raise ValueError('Invalid Sequence Length. Expected Sequence Length is 101.')
 
     x_encoded = encode_with_k_mer_codon(rna_sequence, kmer_dict, k)
-    X_encoded = torch.tensor([x_encoded], dtype=torch.long)
+    X_encoded = torch.tensor([x_encoded], dtype=torch.float32)
 
     return X_encoded
 
@@ -71,7 +101,7 @@ sequence : input 101 sequence to get middle position as target class.
 '''
 
 
-def get_target_prediction_class_based_on_middle_position(rna_sequence: str) -> str:
+def get_middle_nucleoside(rna_sequence: str) -> str:
     target = rna_sequence[50]
     return target
 
@@ -88,13 +118,14 @@ def get_predictions(sequence, encoding_file):
 
     response = {"COMPLETE_RNA_SEQUENCE": sequence, "POSITION_WITH_PROBABILITIES": []}
     i = 0
+    sequence_len = 101
     middle_position_index = 51
-    while i + 101 <= len(sequence):
+    for i in range(len(sequence) - sequence_len + 1):
 
-        subseq = sequence[i:i + 101]
+        subseq = sequence[i:i + sequence_len]
         print('predict for sub sequence:', subseq)
 
-        target = get_target_prediction_class_based_on_middle_position(subseq)
+        target = get_middle_nucleoside(subseq)
 
         # A , C , G , T/U
         if target == 'A':
@@ -115,6 +146,8 @@ def get_predictions(sequence, encoding_file):
 
         x_train = encode_sequence(subseq, encoding_file)
         list_of_probabilities_for_each_class = []
+
+        # Predict Binary Probabilities
         for c in prediction_class:
             data = {}
             model_path = "../model/" + c + "_model.pt"
@@ -128,22 +161,48 @@ def get_predictions(sequence, encoding_file):
             model.eval()
             with torch.no_grad():
                 output = model(x_train)
-                #         print("Raw Output : ", output)
                 probabilities = torch.sigmoid(output)
-                print("Probabilities : ", probabilities)
-                predicted_class = (probabilities > 0.5).float()
-
                 data[c] = probabilities.numpy().tolist()
 
             list_of_probabilities_for_each_class.append(data)
 
+        #
+
+        if target == "T" or target == "U":
+            multi_class_model_path = "../model/multi-class-type-UT.pt"
+        else:
+            multi_class_model_path = "../model/multi-class-type-" + target + ".pt"
+
+        multi_class_model = torch.load(multi_class_model_path, map_location=torch.device('cpu'))
+        device = torch.device("cpu")  # Set the device to CPU
+
+        # Move the model to CPU
+        multi_class_model = multi_class_model.to(device)
+        if isinstance(multi_class_model, torch.nn.DataParallel):
+            multi_class_model = multi_class_model.module.to(device)
+        multi_class_model.eval()
+        probabilities = []
+        with torch.no_grad():
+            output = multi_class_model(x_train.to(device))
+            # print(output)
+            probabilities = torch.softmax(output, dim=0)
+
+        target_positional_mapping = get_position_class_mapping(target)
+        list_of_multiclass_probabilities = []
+        for i, value in enumerate(probabilities):
+            data = {}
+            key = target_positional_mapping[str(i)]
+            data[key] = value.item()
+            list_of_multiclass_probabilities.append(data)
+        print("Multi Class", list_of_multiclass_probabilities)
         rna_index_modification_data = {"RNA_MODIFIED_INDEX": middle_position_index,
                                        "PARENT_MODIFIED_NUCLEOSIDE": target,
-                                       "SUBCLASS_MODIFICATION_PROBABILITIES": list_of_probabilities_for_each_class}
+                                       "BINARY_MODIFICATION_PROBABILITIES": list_of_probabilities_for_each_class,
+                                       "MULTICLASS_MODIFICATION_PROBABILITIES": list_of_multiclass_probabilities}
 
         response["POSITION_WITH_PROBABILITIES"].append(rna_index_modification_data)
 
-        i += 1
+        #i += 1
         middle_position_index += 1
     json_string = json.dumps(response)
     return json_string
@@ -151,7 +210,7 @@ def get_predictions(sequence, encoding_file):
 
 if __name__ == '__main__':
     encoding_file = './3-mer-dictionary.pkl'
-    # sequence = 'GGGGCCGTGGATACCTGCCTTTTAATTCTTTTTTATTCGCCCATCGGGGCCGCGGATACCTGCTTTTTATTTTTTTTTCCTTAGCCCATCGGGGTATCGGCTGCA'
-    sequence = "GGGGCCGTGGATACCTGCCTTTTAATTCTTTTTTATTCGCCCATCGGGGCCGCGGATACCTGCTTTTTATTTTTTTTTCCTTAGCCCATCGGGGTATCGGATACCTGCTGATTCCCTTCCCCTCTGAACCCCCAACACTCTGGCCCATCGGGGTGACGGATATCTGCTTTTTAAAAATTTTCTTTTTTTGGCCCATCGGGGCTTCGGATA"
+    sequence = 'GGGAGGAGGGAGGATGCGCTGTGGGGTTGTTTTTGCCATAAGCGAACTTTGTGCCTGTCCTAGAAGTGAAAATTGTTCAGTCCAAGAAACTGATGTTATTT'
+    #sequence = "GGGGCCGTGGATACCTGCCTTTTAATTCTTTTTTATTCGCCCATCGGGGCCGCGGATACCTGCTTTTTATTTTTTTTTCCTTAGCCCATCGGGGTATCGGATACCTGCTGATTCCCTTCCCCTCTGAACCCCCAACACTCTGGCCCATCGGGGTGACGGATATCTGCTTTTTAAAAATTTTCTTTTTTTGGCCCATCGGGGCTTCGGATA"
     response = get_predictions(sequence, encoding_file)
     print(response)
