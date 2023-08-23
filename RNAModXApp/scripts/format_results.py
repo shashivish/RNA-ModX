@@ -16,9 +16,10 @@ def format_to_json(results):
 
     json_data = json.loads(results)
     print(json_data)
-    print(type(json_data))
+
     dataWithProbabilities = json_data["POSITION_WITH_PROBABILITIES"]
     print(dataWithProbabilities)
+
     for data in dataWithProbabilities:
         binaryIndex = str(data['RNA_MODIFIED_INDEX']) + '-binary'
         binaryColumn = getBinaryColumn(data, data['PARENT_MODIFIED_NUCLEOTIDE'], 'BINARY_MODIFICATION_PROBABILITIES')
