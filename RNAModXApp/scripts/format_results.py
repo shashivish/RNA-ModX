@@ -3,8 +3,6 @@ import pandas as pd
 
 import os
 
-import openpyxl
-
 def format_merged_cell(value1, value2):
     merged_cell = f'<div style="display: flex; flex-direction: row;"><div style="width: 50%;">{value1}</div><div style="width: 50%;">{value2}</div></div>'
     return merged_cell

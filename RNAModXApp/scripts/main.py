@@ -1,7 +1,5 @@
 import streamlit as st
 
-import openpyxl
-
 from encode_sequence import RNAPredictor,RNAClassifier, RNATransformerModel
 from format_results import format_to_json, save_json_to_excel
 
