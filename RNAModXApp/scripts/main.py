@@ -26,7 +26,7 @@ if st.button("Predict"):
     st.write("Sequence:", [rna_sequence][0])
 
     # Display the formatted result as JSON
-    st.table(formatted_result)
+    st.dataframe(formatted_result)
 
     # Save the JSON data to an Excel file
     save_json_to_excel(formatted_result, "rna-sequence_prediction_results.xlsx")
