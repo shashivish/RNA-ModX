@@ -251,7 +251,7 @@ class RNAPredictor():
                 list_of_multiclass_probabilities.append(data)
             print("Multi Class", list_of_multiclass_probabilities)
             rna_index_modification_data = {"RNA_MODIFIED_INDEX": middle_position_index,
-                                           "PARENT_MODIFIED_NUCLEOSIDE": target,
+                                           "PARENT_MODIFIED_NUCLEOTIDE": target,
                                            "BINARY_MODIFICATION_PROBABILITIES": list_of_probabilities_for_each_class,
                                            "MULTICLASS_MODIFICATION_PROBABILITIES": list_of_multiclass_probabilities}
 
