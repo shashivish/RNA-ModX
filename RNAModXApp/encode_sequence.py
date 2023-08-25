@@ -264,10 +264,10 @@ class RNAPredictor():
 
 
 if __name__ == '__main__':
-    encoding_file = './3-mer-dictionary.pkl'
+    encoding_file = '3-mer-dictionary.pkl'
     #sequence = 'GGGAGGAGGGAGGATGCGCTGTGGGGTTGTTTTTGCCATAAGCGAACTTTGTGCCTGTCCTAGAAGTGAAAATTGTTCAGTCCAAGAAACTGATGTTATTT'
     sequence = "GGGGCCGTGGATACCTGCCTTTTAATTCTTTTTTATTCGCCCATCGGGGCCGCGGATACCTGCTTTTTATTTTTTTTTCCTTAGCCCATCGGGGTATCGGATACCTGCTGATTCCCTTCCCCTCTGAACCCCCAACACTCTGGCCCATCGGGGTGACGGATATCTGCTTTTTAAAAATTTTCTTTTTTTGGCCCATCGGGGCTTCGGATA"
 
-    rna_predictor = RNAPredictor(encoder_file_path=encoding_file, model_directory_path="../model")
+    rna_predictor = RNAPredictor(encoder_file_path=encoding_file, model_directory_path="model")
     response = rna_predictor.get_predictions(sequence)
     print(response)
