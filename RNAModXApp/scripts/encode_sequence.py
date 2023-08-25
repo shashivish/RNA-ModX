@@ -135,6 +135,16 @@ class RNAPredictor():
             raise ValueError("An error occurred while loading the file: " + str(e))
         return kmer_dict
 
+    def get_overall_binary_encode(self, overall_binary_encoder_path):
+        try:
+            with open(overall_binary_encoder_path, 'rb') as f:
+                kmer_dict = pickle.load(f)
+        except FileNotFoundError:
+            raise ValueError("File not found! Please ensure the file path is correct.")
+        except Exception as e:
+            raise ValueError("An error occurred while loading the file: " + str(e))
+        return kmer_dict
+
     """
     Takes Input RNA Sequence and returns True/False is Sequence is Modified or not.
     """
@@ -145,7 +155,8 @@ class RNAPredictor():
         with open(model_path, 'rb') as file:
             xgb_model = pickle.load(file)
 
-        kmer_dict = self.get_encoder_dictionary(self.encoder_file_path)
+        overall_encoder_file_path = "3-mer-dict-complete.pkl"
+        kmer_dict = self.get_overall_binary_encode(overall_encoder_file_path)
         x_encoded = self.encode_with_k_mer_codon(rna_sequence, kmer_dict, k)
 
         predictions = xgb_model.predict([x_encoded])
@@ -265,7 +276,7 @@ class RNAPredictor():
 
 if __name__ == '__main__':
     encoding_file = './3-mer-dictionary.pkl'
-    #sequence = 'GGGAGGAGGGAGGATGCGCTGTGGGGTTGTTTTTGCCATAAGCGAACTTTGTGCCTGTCCTAGAAGTGAAAATTGTTCAGTCCAAGAAACTGATGTTATTT'
+    # sequence = 'GGGAGGAGGGAGGATGCGCTGTGGGGTTGTTTTTGCCATAAGCGAACTTTGTGCCTGTCCTAGAAGTGAAAATTGTTCAGTCCAAGAAACTGATGTTATTT'
     sequence = "GGGGCCGTGGATACCTGCCTTTTAATTCTTTTTTATTCGCCCATCGGGGCCGCGGATACCTGCTTTTTATTTTTTTTTCCTTAGCCCATCGGGGTATCGGATACCTGCTGATTCCCTTCCCCTCTGAACCCCCAACACTCTGGCCCATCGGGGTGACGGATATCTGCTTTTTAAAAATTTTCTTTTTTTGGCCCATCGGGGCTTCGGATA"
 
     rna_predictor = RNAPredictor(encoder_file_path=encoding_file, model_directory_path="../model")
