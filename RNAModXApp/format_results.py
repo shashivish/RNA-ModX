@@ -3,6 +3,8 @@ import pandas as pd
 
 import os
 
+from io import BytesIO
+
 def format_merged_cell(value1, value2):
     merged_cell = f'<div style="display: flex; flex-direction: row;"><div style="width: 50%;">{value1}</div><div style="width: 50%;">{value2}</div></div>'
     return merged_cell
@@ -216,3 +218,10 @@ def save_json_to_excel(data, filename):
     downloads_path = os.path.expanduser("~") + "/Downloads/" + filename
     transposed_df.reset_index().to_excel(downloads_path, index=False)
     return downloads_path
+
+def download_excel(formatted_result):
+    excel_output = BytesIO()
+    with pd.ExcelWriter(excel_output, engine='xlsxwriter') as writer:
+        formatted_result.to_excel(writer, sheet_name='RNA Prediction Results', index=False)
+    excel_output.seek(0)
+    return excel_output

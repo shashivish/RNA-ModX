@@ -1,7 +1,7 @@
 import streamlit as st
 import os
 from encode_sequence import RNAPredictor,RNAClassifier, RNATransformerModel
-from format_results import format_to_json, save_json_to_excel
+from format_results import format_to_json, save_json_to_excel, download_excel
 
 # Get the path of the current script
 script_path = os.path.abspath(__file__)
@@ -27,11 +27,13 @@ if st.button("Predict"):
 
     st.write("Sequence:", [rna_sequence][0])
 
+    # Display the download button
+    st.write("Click below to download the Excel file:")
+    st.download_button(label="Download Excel", data=download_excel(formatted_result),
+                       file_name='rna-sequence_prediction_results.xlsx', key='excel-download')
+
     # Display the formatted result as JSON
     st.dataframe(formatted_result)
 
     # Save the JSON data to an Excel file
     # save_json_to_excel(formatted_result, "rna-sequence_prediction_results.xlsx")
-    excel_button = st.download_button(label="Download Excel", data=formatted_result,
-                                      file_name='rna-sequence_prediction_results.xlsx',
-                                      key='excel-download')
