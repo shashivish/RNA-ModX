@@ -222,6 +222,6 @@ def save_json_to_excel(data, filename):
 def download_excel(formatted_result):
     excel_output = BytesIO()
     with pd.ExcelWriter(excel_output, engine='xlsxwriter') as writer:
-        formatted_result.to_excel(writer, sheet_name='RNA Prediction Results', index=False)
+        formatted_result.reset_index().to_excel(writer, sheet_name='RNA Prediction Results', index=False)
     excel_output.seek(0)
     return excel_output
