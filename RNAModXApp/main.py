@@ -17,9 +17,11 @@ script_path = os.path.abspath(__file__)
 relative_path = os.path.join(os.path.dirname(script_path), "requirements.txt")
 st.text(relative_path)
 if os.path.exists(relative_path):
-    st.text("File exists:", relative_path)
+    st.text("File exists")
+    st.text(relative_path)
 else:
-    st.text("File does not exist:", relative_path)
+    st.text("File does not exist")
+    st.text(relative_path)
 # st.title("Let's predict RNA Sequences!")
 #
 # # Adding a text input widget
