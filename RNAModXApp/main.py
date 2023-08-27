@@ -15,11 +15,7 @@ script_path = os.path.abspath(__file__)
 
 # Construct relative path to a file (assuming it's in the same directory as the script)
 relative_path = os.path.join(os.path.dirname(script_path), "requirements.txt")
-
-# Read and display the content of the file
-with open(relative_path, "r") as file:
-    content = file.read()
-    st.text(content)
+st.text(relative_path)
 
 # st.title("Let's predict RNA Sequences!")
 #
