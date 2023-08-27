@@ -7,8 +7,14 @@ import os
 
 current_directory = os.getcwd()
 
-data_file_path = os.path.join(current_directory, "model", "XGB_OverallBinary.pkl")
+data_file_path = os.path.join(current_directory, "3-mer-dictionary.pkl")
 st.text(data_file_path)
+if os.path.exists(data_file_path):
+    st.text("File exists")
+    st.text(data_file_path)
+else:
+    st.text("File does not exist")
+    st.text(data_file_path)
 
 # Get the path of the current script
 script_path = os.path.abspath(__file__)
