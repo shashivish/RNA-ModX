@@ -31,4 +31,7 @@ if st.button("Predict"):
     st.dataframe(formatted_result)
 
     # Save the JSON data to an Excel file
-    save_json_to_excel(formatted_result, "rna-sequence_prediction_results.xlsx")
+    # save_json_to_excel(formatted_result, "rna-sequence_prediction_results.xlsx")
+    excel_button = st.download_button(label="Download Excel", data=formatted_result,
+                                      file_name='rna-sequence_prediction_results.xlsx',
+                                      key='excel-download')
