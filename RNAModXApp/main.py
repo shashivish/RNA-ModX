@@ -8,7 +8,7 @@ import os
 current_directory = os.getcwd()
 
 data_file_path = os.path.join(current_directory, "model", "XGB_OverallBinary.pkl")
-st.text("Data File Path:", data_file_path)
+st.text(data_file_path)
 
 # Get the path of the current script
 script_path = os.path.abspath(__file__)
