@@ -220,8 +220,11 @@ def save_json_to_excel(data, filename):
     return downloads_path
 
 def download_excel(formatted_result):
+    df = pd.DataFrame(formatted_result)
+    transposed_df = df.T
+
     excel_output = BytesIO()
     with pd.ExcelWriter(excel_output, engine='xlsxwriter') as writer:
-        formatted_result.reset_index().to_excel(writer, sheet_name='RNA Prediction Results', index=False)
+        transposed_df.reset_index().to_excel(writer, sheet_name='RNA Prediction Results', index=False)
     excel_output.seek(0)
     return excel_output
