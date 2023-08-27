@@ -6,6 +6,8 @@ from format_results import format_to_json, save_json_to_excel
 # Get the path of the current script
 script_path = os.path.abspath(__file__)
 
+st.title("Let's predict RNA Sequences!")
+
 # Adding a text input widget
 rna_sequence = st.text_input("Enter RNA Sequence", "Type here...")
 
