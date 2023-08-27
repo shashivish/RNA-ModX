@@ -20,7 +20,7 @@ if st.button("Predict"):
     print([rna_sequence][0])
     encoding_file = './3-mer-dictionary.pkl'
 
-    rna_predictor = RNAPredictor(encoder_file_path=encoding_file, model_directory_path=os.path.join(current_directory, "RNAModXApp", "model"))
+    rna_predictor = RNAPredictor(encoder_file_path=encoding_file, model_directory_path=os.path.join(current_directory, "model"))
     response = rna_predictor.get_predictions([rna_sequence][0])
 
     print('response')
