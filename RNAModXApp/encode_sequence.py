@@ -74,6 +74,8 @@ class RNAPredictor():
     def __init__(self, encoder_file_path, model_directory_path):
         # self.rna_transformer = RNATransformerModel()
         # self.rna_lstm = RNAClassifier()
+        print("encoder_file_path: ", encoder_file_path)
+        print("model_directory_path: ", model_directory_path)
         self.encoder_file_path = encoder_file_path
         self.model_directory_path = model_directory_path
 
@@ -264,7 +266,7 @@ class RNAPredictor():
 
 
 if __name__ == '__main__':
-    encoding_file = '3-mer-dictionary.pkl'
+    encoding_file = './3-mer-dictionary.pkl'
     #sequence = 'GGGAGGAGGGAGGATGCGCTGTGGGGTTGTTTTTGCCATAAGCGAACTTTGTGCCTGTCCTAGAAGTGAAAATTGTTCAGTCCAAGAAACTGATGTTATTT'
     sequence = "GGGGCCGTGGATACCTGCCTTTTAATTCTTTTTTATTCGCCCATCGGGGCCGCGGATACCTGCTTTTTATTTTTTTTTCCTTAGCCCATCGGGGTATCGGATACCTGCTGATTCCCTTCCCCTCTGAACCCCCAACACTCTGGCCCATCGGGGTGACGGATATCTGCTTTTTAAAAATTTTCTTTTTTTGGCCCATCGGGGCTTCGGATA"
 
