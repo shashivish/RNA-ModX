@@ -132,7 +132,7 @@ class RNAPredictor():
             with open(encoding_file_path, 'rb') as f:
                 kmer_dict = pickle.load(f)
         except FileNotFoundError:
-            raise ValueError("File not found! Please ensure the file path is correct.")
+            raise ValueError("File not found! Please ensure the file path is correct: " + encoding_file_path)
         except Exception as e:
             raise ValueError("An error occurred while loading the file: " + str(e))
         return kmer_dict
