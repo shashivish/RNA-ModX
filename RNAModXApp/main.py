@@ -3,6 +3,13 @@ import streamlit as st
 from encode_sequence import RNAPredictor,RNAClassifier, RNATransformerModel
 from format_results import format_to_json, save_json_to_excel
 
+import os
+
+current_directory = os.getcwd()
+
+data_file_path = os.path.join(current_directory, "model", "XGB_OverallBinary.pkl")
+print("Data File Path:", data_file_path)
+
 st.title("Let's predict RNA Sequences!")
 
 # Adding a text input widget
