@@ -74,6 +74,8 @@ class RNAPredictor():
     def __init__(self, encoder_file_path, model_directory_path):
         # self.rna_transformer = RNATransformerModel()
         # self.rna_lstm = RNAClassifier()
+        print("encoder_file_path: ", encoder_file_path)
+        print("model_directory_path: ", model_directory_path)
         self.encoder_file_path = encoder_file_path
         self.model_directory_path = model_directory_path
 
@@ -130,7 +132,7 @@ class RNAPredictor():
             with open(encoding_file_path, 'rb') as f:
                 kmer_dict = pickle.load(f)
         except FileNotFoundError:
-            raise ValueError("File not found! Please ensure the file path is correct.")
+            raise ValueError("File not found! Please ensure the file path is correct: " + encoding_file_path)
         except Exception as e:
             raise ValueError("An error occurred while loading the file: " + str(e))
         return kmer_dict
@@ -279,6 +281,6 @@ if __name__ == '__main__':
     # sequence = 'GGGAGGAGGGAGGATGCGCTGTGGGGTTGTTTTTGCCATAAGCGAACTTTGTGCCTGTCCTAGAAGTGAAAATTGTTCAGTCCAAGAAACTGATGTTATTT'
     sequence = "GGGGCCGTGGATACCTGCCTTTTAATTCTTTTTTATTCGCCCATCGGGGCCGCGGATACCTGCTTTTTATTTTTTTTTCCTTAGCCCATCGGGGTATCGGATACCTGCTGATTCCCTTCCCCTCTGAACCCCCAACACTCTGGCCCATCGGGGTGACGGATATCTGCTTTTTAAAAATTTTCTTTTTTTGGCCCATCGGGGCTTCGGATA"
 
-    rna_predictor = RNAPredictor(encoder_file_path=encoding_file, model_directory_path="../model")
+    rna_predictor = RNAPredictor(encoder_file_path=encoding_file, model_directory_path="model")
     response = rna_predictor.get_predictions(sequence)
     print(response)

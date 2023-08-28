@@ -1,19 +1,28 @@
 import json
 import pandas as pd
 
+import os
+
+from io import BytesIO
+
 def format_merged_cell(value1, value2):
     merged_cell = f'<div style="display: flex; flex-direction: row;"><div style="width: 50%;">{value1}</div><div style="width: 50%;">{value2}</div></div>'
     return merged_cell
 
-def format_to_json(json_data):
+def format_to_json(results):
     df = pd.DataFrame(columns=['Index'], data={'Index': ['Nucleotide','hAm','hCm','hGm','hTm','hm1A',
                                                          'hm5C','hm5U','hm6A','hm6Am','hm7G','hPsi','Atol']})
-    print(df)
+    # print(df)
 
-    dataWithProbabilities = json_data['POSITION_WITH_PROBABILITIES']
+    json_data = json.loads(results)
+    print(json_data)
+
+    dataWithProbabilities = json_data["POSITION_WITH_PROBABILITIES"]
+    print(dataWithProbabilities)
+
     for data in dataWithProbabilities:
         binaryIndex = str(data['RNA_MODIFIED_INDEX']) + '-binary'
-        binaryColumn = getColumn(data, data['PARENT_MODIFIED_NUCLEOTIDE'], 'BINARY_MODIFICATION_PROBABILITIES')
+        binaryColumn = getBinaryColumn(data, data['PARENT_MODIFIED_NUCLEOTIDE'], 'BINARY_MODIFICATION_PROBABILITIES')
         df[binaryIndex] = binaryColumn
         multiIndex = str(data['RNA_MODIFIED_INDEX']) + '-multi'
         multiColumn = getColumn(data, '', 'MULTICLASS_MODIFICATION_PROBABILITIES')
@@ -38,8 +47,8 @@ def getColumn(jsonObject, nucleotide, type):
     hm7G = 0.0
     hPsi = 0.0
     Atol = 0.0
-    print("probabilities: ", probabilities)
     for p in probabilities:
+        print("p: ", p)
         if "hAm" in p:
             hAm = round(float(p['hAm']),3)
         if "hCm" in p:
@@ -94,13 +103,84 @@ def getColumn(jsonObject, nucleotide, type):
     print("column: ", column)
     return column
 
+def getBinaryColumn(jsonObject, nucleotide, type):
+    # print('jsonObject: ', jsonObject)
+    probabilities = jsonObject[type]
+    hAm = 0.0
+    hCm = 0.0
+    hGm = 0.0
+    hTm = 0.0
+    hm1A = 0.0
+    hm5C = 0.0
+    hm5U = 0.0
+    hm6A = 0.0
+    hm6Am = 0.0
+    hm7G = 0.0
+    hPsi = 0.0
+    Atol = 0.0
+    for p in probabilities:
+        print("p: ", p)
+        if "hAm" in p:
+            hCm = round(float(p['hAm'][0]),3)
+        if "hCm" in p:
+            hCm = round(float(p['hCm'][0]),3)
+        if "hGm" in p:
+            hGm = round(float(p['hGm'][0]),3)
+        if "hTm" in p:
+            hTm = round(float(p['hTm'][0]),3)
+        if "hm1A" in p:
+            hm1A = round(float(p['hm1A'][0]),3)
+        if "hm5C" in p:
+            hm1A = round(float(p['hm5C'][0]),3)
+        if "hm5U" in p:
+            hm5U = round(float(p['hm5U'][0]),3)
+        if "hm6A" in p:
+            hm6A = round(float(p['hm6A'][0]),3)
+        if "hm6Am" in p:
+            hm6Am = round(float(p['hm6Am'][0]),3)
+        if "hm7G" in p:
+            hm7G = round(float(p['hm7G'][0]),3)
+        if "hPsi" in p:
+            hPsi = round(float(p['hPsi'][0]),3)
+        if "Atol" in p:
+            Atol = round(float(p['Atol'][0]),3)
+
+    if hAm == 0.0:
+        hAm = ''
+    if hCm == 0.0:
+        hCm = ''
+    if hGm == 0.0:
+        hGm = ''
+    if hTm == 0.0:
+        hTm = ''
+    if hm1A == 0.0:
+        hm1A = ''
+    if hm5C == 0.0:
+        hm5C = ''
+    if hm5U == 0.0:
+        hm5U = ''
+    if hm6A == 0.0:
+        hm6A = ''
+    if hm6Am == 0.0:
+        hm6Am = ''
+    if hm7G == 0.0:
+        hm7G = ''
+    if hPsi == 0.0:
+        hPsi = ''
+    if Atol == 0.0:
+        Atol = ''
+    column = [nucleotide, hAm, hCm, hGm, hTm, hm1A, hm5C, hm5U, hm6A, hm6Am, hm7G, hPsi, Atol]
+
+    print("column: ", column)
+    return column
+
 def getValue(binaryData, multiData, param):
     binary = 0.0
     multi = 0.0
 
     for p in binaryData:
         if param in p:
-            binary = float(p[param])
+            binary = float(p[param][0])
 
     for p in multiData:
         if param in p:
@@ -134,4 +214,17 @@ def getFinalColumn(binaryData, multiData):
 
 def save_json_to_excel(data, filename):
     df = pd.DataFrame(data)
-    df.to_excel(filename, index=False)
+    transposed_df = df.T
+    downloads_path = os.path.expanduser("~") + "/Downloads/" + filename
+    transposed_df.reset_index().to_excel(downloads_path, index=False)
+    return downloads_path
+
+def download_excel(formatted_result):
+    df = pd.DataFrame(formatted_result)
+    transposed_df = df.T
+
+    excel_output = BytesIO()
+    with pd.ExcelWriter(excel_output, engine='xlsxwriter') as writer:
+        transposed_df.reset_index().to_excel(writer, sheet_name='RNA Prediction Results', index=False)
+    excel_output.seek(0)
+    return excel_output
