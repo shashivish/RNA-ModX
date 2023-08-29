@@ -46,4 +46,4 @@ if st.button("Predict"):
         # Save the JSON data to an Excel file
         # save_json_to_excel(formatted_result, "rna-sequence_prediction_results.xlsx")
     else:
-        st.write("RNA Sequence input [" , [rna_sequence][0], "] is invalid. Please key in a sequence with A,T,C,G characters.")
+        st.write("RNA Sequence input [" , [rna_sequence][0], "] is invalid. Please key in a sequence with A,T,U,C,G,N characters.")
