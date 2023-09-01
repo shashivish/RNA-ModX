@@ -1,6 +1,6 @@
 # RNA Prediction Modification
 
-![RNA Molecule](images/rna-img.png)
+![RNA Molecule](RNAModXApp/images/rna-img.png)
 
 Welcome to the RNA Prediction Modification project! This repository aims to provide an introduction and guide to understanding RNA prediction modification using our solution. This project is designed by us, the RNAModX team, to help you predict if the RNA sequence is modified, and the position of the RNA Modification.
 
@@ -47,13 +47,13 @@ The solution is:
 
 ## Example
 
-1. The UI looks like this: ![UI](images/ui-original.png)
+1. The UI looks like this: ![UI](RNAModXApp/images/ui-original.png)
 2. Key in RNA sequence: GGGGCCGTGGATACCTGCCTTTTAATTCTTTTTTATTCGCCCATCGGGGCCGCGGATACCTGCTTTTTATTTTTTTTTCCTTAGCCCATCGGGGTATCGGATACCTGCTGATTCCCTTCCCCTCTGAACCCCCAACACTCTGGCCCATCGGGGTGACGGATATCTGCTTTTTAAAAATTTTCTTTTTTTGGCCCATCGGGGCTTCGGATA
 3. Click 'Predict'
-4. Results look like this: ![Results-1](images/results-1.png)
-   ![Results-2](images/results-2.png)
+4. Results look like this: ![Results-1](RNAModXApp/images/results-1.png)
+   ![Results-2](RNAModXApp/images/results-2.png)
 5. Click on 'Download Excel' to view the results in excel file
-   ![Excel](images/excel.png)
+   ![Excel](RNAModXApp/images/excel.png)
 
 ## Results Interpretation
 The result for each position is displayed in the UI, as shown below:
