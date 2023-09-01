@@ -43,7 +43,7 @@ To follow along with this project, you'll need:
 
 ## Architecture
 The solution is:
-![Architecture](images/architecture.png)
+![Architecture](RNAModXApp/images/architecture.png)
 
 ## Example
 
@@ -57,7 +57,7 @@ The solution is:
 
 ## Results Interpretation
 The result for each position is displayed in the UI, as shown below:
-![Results-interpreation](images/results-interpretation.png)
+![Results-interpreation](RNAModXApp/images/results-interpretation.png)
 The index refers to the position of the nucleotide in the sequence
 Eg. 51
 
