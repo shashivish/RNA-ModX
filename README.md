@@ -12,7 +12,9 @@ Welcome to the RNA Prediction Modification project! This repository aims to prov
 - [Installation](#installation)
 - [Usage](#usage)
 - [Examples](#examples)
-- [Advanced Techniques](#advanced-techniques)
+- [Results Interpretation](#results-interpretation)
+- [Accessibility](#accessibility)
+- [Architecture](#architecture)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -39,6 +41,10 @@ To follow along with this project, you'll need:
 3. Install the required libraries and dependencies: pip install -r requirements.txt
 4. Run the command: streamlit run main.py
 
+## Architecture
+The solution is:
+![Architecture](RNAModXApp/images/architecture.png)
+
 ## Example
 
 1. The UI looks like this: ![UI](RNAModXApp/images/ui-original.png)
@@ -48,6 +54,20 @@ To follow along with this project, you'll need:
    ![Results-2](RNAModXApp/images/results-2.png)
 5. Click on 'Download Excel' to view the results in excel file
    ![Excel](RNAModXApp/images/excel.png)
+
+## Results Interpretation
+The result for each position is displayed in the UI, as shown below:
+![Results-interpreation](RNAModXApp/images/results-interpretation.png)
+The index refers to the position of the nucleotide in the sequence
+Eg. 51
+
+In the 51st position, the nucleotide predicted to be modified is C.
+At the 51st position, the modification type could be either hCm or hm5C. 
+
+51-binary is the final class binary prediction results (ie. Final layer of the architecture diagram)
+51-multi is the multi-class prediction of which class the nucleotide belongs to.
+51-final is the multiplication of 51-binary and 51-multi.
+
 
 ## Accessibility
 The RNA Modification application can be accessed at: https://rna-modx.streamlit.app/
