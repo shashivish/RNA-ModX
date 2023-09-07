@@ -157,8 +157,7 @@ class RNAPredictor():
         with open(model_path, 'rb') as file:
             xgb_model = pickle.load(file)
 
-        overall_encoder_file_path = "3-mer-dictionary.pkl"
-        kmer_dict = self.get_overall_binary_encode(overall_encoder_file_path)
+        kmer_dict = self.get_overall_binary_encode(self.encoder_file_path)
         x_encoded = self.encode_with_k_mer_codon(rna_sequence, kmer_dict, k)
 
         predictions = xgb_model.predict([x_encoded])
